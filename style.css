@@ -75,6 +75,17 @@ select {
 .primario:hover {
   background: #54346f;
 }
+.secundario{
+  background-color: #69428a;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-right: 5px;
+  transition: background-color 0.3s;
+}
 .linha-titulo {
   display: flex;
   justify-content: space-between;
