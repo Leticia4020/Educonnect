@@ -1,6 +1,3 @@
-
-// PROTÓTIPO DE TREINAMENTO: versão corrigida e integrada.
-
 const formulario = document.querySelector('#form-cadastro');
 const lista = document.querySelector('#lista');
 const busca = document.querySelector('#busca');
@@ -9,14 +6,23 @@ const aviso = document.querySelector('#aviso');
 const vazio = document.querySelector('#vazio');
 const iconeLupa = document.getElementById('icone-lupa-clicavel');
 const btnLimpar = document.getElementById('limpar');
+const modalEditar = document.querySelector('#modal-editar');
+const formEditar = document.querySelector('#form-editar');
+const editarNome = document.querySelector('#editar-nome');
+const editarEmail = document.querySelector('#editar-email');
+const editarCurso = document.querySelector('#editar-curso');
+const cancelarEdicao = document.querySelector('#cancelar-edicao');
 
 let interessados = [];
 let proximoId = 1;
+let idEditando = null;
 
 function criarTexto(tag, classe, texto) {
   const elemento = document.createElement(tag);
 
-  if (classe) elemento.className = classe;
+  if (classe) {
+    elemento.className = classe;
+  }
 
   elemento.textContent = texto;
 
@@ -26,9 +32,8 @@ function criarTexto(tag, classe, texto) {
 function desenharLista() {
   lista.replaceChildren();
 
-  const pesquisa = busca.value.toLowerCase().trim();
+  const pesquisa = busca.value.trim().toLowerCase();
 
-  // Exibe somente quando o nome completo for digitado
   const filtrados = interessados.filter(pessoa =>
     pessoa.nome.toLowerCase() === pesquisa
   );
@@ -44,16 +49,25 @@ function desenharLista() {
       criarTexto('small', '', pessoa.curso || '(sem curso)')
     );
 
-    const botao = criarTexto('button', 'excluir', 'Excluir');
+    const btnEditar = criarTexto('button', 'editar', 'Editar');
+    btnEditar.type = 'button';
 
-    botao.type = 'button';
-    botao.dataset.identificador = String(pessoa.id);
+    btnEditar.addEventListener('click', () => {
+      carregarCadastro(pessoa.id);
+    });
 
-    botao.addEventListener('click', () =>
-      excluirInteressado(botao.dataset.identificador)
-    );
+    const btnExcluir = criarTexto('button', 'excluir', 'Excluir');
+    btnExcluir.type = 'button';
 
-    item.append(informacoes, botao);
+    btnExcluir.addEventListener('click', () => {
+      excluirInteressado(pessoa.id);
+    });
+
+    const botoes = document.createElement('div');
+
+    botoes.append(btnEditar, btnExcluir);
+
+    item.append(informacoes, botoes);
 
     lista.appendChild(item);
   });
@@ -63,17 +77,6 @@ function desenharLista() {
   vazio.hidden = filtrados.length > 0;
 }
 
-function excluirInteressado(id) {
-  interessados = interessados.filter(
-    pessoa => String(pessoa.id) !== String(id)
-  );
-
-  aviso.textContent = 'Registro excluído.';
-
-  desenharLista();
-}
-
-// Cadastro de interessados
 formulario.addEventListener('submit', evento => {
   evento.preventDefault();
 
@@ -83,82 +86,164 @@ formulario.addEventListener('submit', evento => {
 
   if (!nome || !email || !curso) {
     aviso.textContent = 'Preencha todos os campos.';
+    aviso.className = 'aviso-erro';
     return;
   }
 
-  // Validação do nome
-  if (!/^[\p{L}\s'-]+$/u.test(nome)) {
-    aviso.textContent = 'Digite um nome válido.';
+  const validarNome = /^[\p{L}\s'-]+$/u;
+
+  if (!validarNome.test(nome)) {
+    aviso.textContent = 'Incorreto. Digite sem números e caracteres especiais.';
+    aviso.className = 'aviso-erro';
     return;
   }
 
-  // Validação do e-mail
   if (!document.querySelector('#email').checkValidity()) {
     aviso.textContent = 'Digite um e-mail válido.';
+    aviso.className = 'aviso-erro';
     return;
   }
 
-  interessados.push({
-    id: proximoId++,
-    nome,
-    email,
-    curso
-  });
+  if (idEditando !== null) {
+    interessados = interessados.map(pessoa => {
+      if (pessoa.id === idEditando) {
+        return { ...pessoa, nome, email, curso };
+      }
 
-  aviso.textContent = 'Interessado cadastrado com sucesso!';
+      return pessoa;
+    });
+
+    aviso.textContent = 'Cadastro atualizado com sucesso!';
+    idEditando = null;
+
+  } else {
+    interessados.push({
+      id: proximoId++,
+      nome,
+      email,
+      curso
+    });
+
+    aviso.textContent = 'Interessado cadastrado com sucesso!';
+  }
+
+  aviso.className = 'aviso-certo';
 
   formulario.reset();
+
+  busca.value = '';
+
+  lista.replaceChildren();
+
+  vazio.hidden = false;
 
   desenharLista();
 });
 
-// Funcionalidade da lupa
+function carregarCadastro(id) {
+  const pessoa = interessados.find(pessoa => pessoa.id === id);
+
+  if (!pessoa) return;
+
+  idEditando = id;
+
+  editarNome.value = pessoa.nome;
+  editarEmail.value = pessoa.email;
+  editarCurso.value = pessoa.curso;
+
+  modalEditar.classList.add('ativo');
+}
+
+function excluirInteressado(id) {
+  interessados = interessados.filter(pessoa => pessoa.id !== id);
+
+  if (idEditando === id) {
+    idEditando = null;
+    formulario.reset();
+  }
+
+  aviso.textContent = 'Registro excluído.';
+  aviso.className = 'aviso-certo';
+
+  desenharLista();
+}
+
 if (iconeLupa && busca) {
   iconeLupa.addEventListener('click', () => {
-    busca.focus();
+    desenharLista();
   });
 }
 
-// BOTÃO LIMPAR PESQUISA
 if (btnLimpar && busca) {
   btnLimpar.addEventListener('click', evento => {
     evento.preventDefault();
 
     busca.value = '';
 
-    desenharLista();
+    lista.replaceChildren();
+
+    vazio.hidden = false;
+
+    total.textContent = `${interessados.length} registro${interessados.length !== 1 ? 's' : ''}`;
 
     aviso.textContent = 'Pesquisa limpa com sucesso!';
+    aviso.className = 'aviso-certo';
 
     busca.focus();
   });
 }
 
-// Pesquisa pelo nome completo
-busca.addEventListener('input', desenharLista);
-
-// Inicializa a lista
 desenharLista();
-
-formulario.addEventListener('submit', evento => {
+formEditar.addEventListener('submit', evento => {
   evento.preventDefault();
-  const nome = document.querySelector('#nome').value.trim();
-  const email = document.querySelector('#email').value.trim();
-  const curso = document.querySelector('#curso').value;
 
-  const validarNome =/^[\p{L}\s]+$/u;;
-  if (!validarNome.test(nome)) {
-    aviso.textContent ='Incorreto. Digite sem números e caracteres especiais';
-    aviso.className='aviso-erro';
+  const nome = editarNome.value.trim();
+  const email = editarEmail.value.trim();
+  const curso = editarCurso.value;
+
+  const validarNome = /^[\p{L}\s'-]+$/u;
+
+  if (!nome || !email || !curso) {
+    alert('Preencha todos os campos.');
     return;
   }
 
-  interessados.push({ id: proximoId++, nome, email, curso });
-  aviso.textContent = 'Interessado cadastrado com sucesso!';
-  aviso.className='aviso-certo';
-  formulario.reset();
+  if (!validarNome.test(nome)) {
+    alert('Digite um nome válido, sem números ou caracteres especiais.');
+    return;
+  }
+
+  if (!editarEmail.checkValidity()) {
+    alert('Digite um e-mail válido.');
+    return;
+  }
+
+  interessados = interessados.map(pessoa => {
+    if (pessoa.id === idEditando) {
+      return { ...pessoa, nome, email, curso };
+    }
+
+    return pessoa;
+  });
+
+  idEditando = null;
+
+  modalEditar.classList.remove('ativo');
+
+  formEditar.reset();
+
+  busca.value = '';
+
+  aviso.textContent = 'Cadastro atualizado com sucesso!';
+  aviso.className = 'aviso-certo';
+
   desenharLista();
 });
 
-busca.addEventListener('input', desenharLista);
-desenharLista();
+cancelarEdicao.addEventListener('click', () => {
+  modalEditar.classList.remove('ativo');
+
+  formEditar.reset();
+
+  idEditando = null;
+});
