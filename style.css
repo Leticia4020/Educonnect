@@ -75,17 +75,6 @@ select {
 .primario:hover {
   background: #54346f;
 }
-.secundario{
-  background-color: #69428a;
-  color: white;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
-  margin-right: 5px;
-  transition: background-color 0.3s;
-}
 .linha-titulo {
   display: flex;
   justify-content: space-between;
@@ -118,9 +107,9 @@ select {
   margin-top: 2px;
 }
 .excluir {
-  border: 1px solid #d9a4a4;
-  background: #fff;
-  color: #9d3434;
+  border: 1px solid #080404;
+  background: #a30909;
+  color: #ebe6e6;
   padding: 8px;
   border-radius: 6px;
   cursor: pointer;
@@ -142,26 +131,25 @@ footer {
   padding: 20px;
   color: #6c7175;
 }
-/* Container que posiciona a lupa e o input juntos */
-/* Container que posiciona a lupa e o input juntos */
+
 .input-busca-wrapper {
   position: relative;
   width: 100%;
   margin-bottom: 10px;
 }
 
-/* Ajusta o input para abrir espaço para a lupa na DIREITA */
+
 .input-busca-wrapper input {
   width: 100%;
-  padding-right: 38px !important; /* Abre espaço à direita */
-  padding-left: 11px; /* Volta o padding esquerdo normal */
+  padding-right: 38px !important; 
+  padding-left: 11px; 
   box-sizing: border-box;
 }
 
-/* Posiciona a lupa no canto direito */
+
 .icone-lupa {
   position: absolute;
-  right: 12px; /* Mudou de left para right */
+  right: 12px; 
   top: 50%;
   transform: translateY(-50%);
   color: #68727d;
@@ -170,9 +158,105 @@ footer {
   pointer-events: auto;
 }
 
-/* Efeito ao passar o mouse */
+
 .icone-lupa:hover {
   color: #69428a; 
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  z-index: 1000;
+}
+
+.modal.ativo {
+  display: flex;
+}
+
+.modal-conteudo {
+  background: white;
+  width: 100%;
+  max-width: 450px;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+}
+
+.modal-conteudo h2 {
+  margin-bottom: 20px;
+  color: #30223e;
+}
+
+.modal-conteudo form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modal-conteudo input,
+.modal-conteudo select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.botoes-modal {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.botoes-modal button {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.botoes-modal button[type="submit"] {
+  background: #30223e;
+  color: white;
+}
+
+#cancelar-edicao {
+  background: #ddd;
+  color: #333;
+}
+
+
+.editar {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-right: 5px;
+  transition: background-color 0.3s;
+}
+.secundario{
+ background-color: #69428a;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-right: 5px;
+  transition: background-color 0.3s;
+}
+
+
+.editar:hover {
+  background-color: #69428a;
 }
 
 @media (max-width: 768px) {
