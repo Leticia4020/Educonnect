@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduConnect | Cadastro de Interessados</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <header class="cabecalho">
+    <div class="conteudo-cabecalho">
+      <h1>EduConnect</h1>
+      <p>Gerenciamento de interessados em cursos</p>
+    </div>
+  </header>
+  <main class="painel">
+    <section class="cartao">
+      <h2>Novo interessado</h2>
+      <p>Preencha os campos para realizar o cadastro.</p>
+      <form id="form-cadastro">
+        <label for="nome">Nome completo</label>
+        <input id="nome" name="nome" type="text" placeholder="Ex.: Maria Silva" pattern="[A-Za-zÀ-ÿ\s]+]" title="Digite apenas letras e espaços" required>
+        <label for="email">E-mail</label>
+        <input id="email" name="email" type="email" placeholder="Ex.: maria@email.com" required>
+        <label for="curso">Curso de interesse</label>
+        <select id="curso" name="curso" required>
+          <option value="">Selecione um curso</option>
+          <option value="Desenvolvimento de Sistemas">Desenvolvimento de Sistemas</option>
+          <option value="Enfermagem">Enfermagem</option>
+          <option value="Segurança do Trabalho">Segurança do Trabalho</option>
+          <option value="Administração">Administração</option>
+        </select>
+        <button type="submit" class="primario">Cadastrar interessado</button>
+      </form>
+      <p id="aviso" aria-live="polite"></p>
+    </section>
+   <section class="cartao">
+      <div class="linha-titulo">
+        <h2>Interessados cadastrados</h2>
+        <span id="total">0 registros</span>
+      </div>
+      <label for="busca">Pesquisar por nome</label>
+      
+      <!-- Container adicionado para envolver a lupa e o input -->
+      <div class="input-busca-wrapper">
+        <input id="busca" name="busca" type="search" placeholder="Digite o nome..." pattern="[A-Za-zÀ-ÿ\s]+" title="Digite apenas letras e espaços">
+        
+        <svg id="icone-lupa-clicavel" class="icone-lupa" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+      </div>
+
+      <button id="limpar" class="secundario">Limpar pesquisa</button>
+      <ul id="lista" class="lista"></ul>
+      <p id="vazio">Nenhum interessado encontrado.</p>
+    </section>
+  </main>
+  <footer>EduConnect • versão de avaliação</footer>
+</body>
+</html>
