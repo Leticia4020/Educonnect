@@ -41,8 +41,33 @@
         <span id="total">0 registros</span>
       </div>
       <label for="busca">Pesquisar por nome</label>
+      <div id="modal-editar" class="modal">
+  <div class="modal-conteudo">
+    <h2>Editar interessado</h2>
+
+    <form id="form-editar">
+      <label for="editar-nome">Nome completo</label>
+      <input type="text" id="editar-nome" required>
+
+      <label for="editar-email">E-mail</label>
+      <input type="email" id="editar-email" required>
+
+      <label for="editar-curso">Curso</label>
+      <select id="editar-curso" required>
+        <option value="">Selecione um curso</option>
+        <option value="Desenvolvimento de Sistemas">Desenvolvimento de Sistemas</option>
+        <option value="Análise e Desenvolvimento de Sistemas">Análise e Desenvolvimento de Sistemas</option>
+        <option value="Administração">Administração</option>
+      </select>
+
+      <div class="botoes-modal">
+        <button type="submit">Salvar alterações</button>
+        <button type="button" id="cancelar-edicao">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
       
-      <!-- Container adicionado para envolver a lupa e o input -->
       <div class="input-busca-wrapper">
         <input id="busca" name="busca" type="search" placeholder="Digite o nome..." pattern="[A-Za-zÀ-ÿ\s]+" title="Digite apenas letras e espaços">
         
@@ -52,7 +77,7 @@
         </svg>
       </div>
 
-      <button id="secundario" class="secundario">Limpar pesquisa</button>
+      <button id="limpar" class="secundario">Limpar pesquisa</button>
       <ul id="lista" class="lista"></ul>
       <p id="vazio">Nenhum interessado encontrado.</p>
     </section>
